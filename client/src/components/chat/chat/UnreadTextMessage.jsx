@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { secreatKey } from '../../../constants/data';
 
 
 
@@ -12,13 +13,13 @@ function UnreadTextMessage({messages, setMessages,unreadTextMessages, setUnreadT
             counts?.forEach(count => {
                 count.objectId?.forEach(objectId=>{
                     messages?.map(message=>{
-                        if(message.conversationId === count.conversationId ){
-                            if(message._id=== objectId){
-                                unreadmessage.push(message)
-                            }else{
-                                updatedMessages.push(message)
+                        if (message.text !== secreatKey) {
+                            if (message.conversationId === count.conversationId) {
+                              message._id === objectId ? unreadmessage.push(message) : updatedMessages.push(message);
                             }
-                        }
+                          }
+                        
+                        
                     })
                     })
                  

@@ -55,8 +55,8 @@ const Conversation = ({ user, counts, setCounts}) => {
 
     useEffect(() => {
         const getConversationMessage = async() => {
-            const data = await getConversation({ senderId: account.sub, receiverId: user.sub });
-            setMessage({ text: data?.message, timestamp: data?.updatedAt, conversationId:data._id });
+            const data = await getConversation({ senderId: account?.sub, receiverId: user?.sub });
+            setMessage({ text: data?.message, timestamp: data?.updatedAt, conversationId:data?._id });
         }
         getConversationMessage();
     }, [newMessageFlag]);
@@ -66,6 +66,10 @@ const Conversation = ({ user, counts, setCounts}) => {
         await setConversation({ senderId: account.sub, receiverId: user.sub });
     }
 
+
+    const name  = user?.name?.slice(0,11)
+    const precision = user?.name?.length > 11?true:false
+
     return (
         <Component onClick={() => getUser()}>
             <Box sx={{ padding:'0 14px'}}>
@@ -73,7 +77,12 @@ const Conversation = ({ user, counts, setCounts}) => {
             </Box>
             <Box style={{width: '100%'}}>
                 <Container>
-                    <Typography>{user.name}</Typography>
+                    <Typography>{name}</Typography>
+
+                    {   precision
+                        &&
+                        <Typography>..</Typography>
+                    }
                     {
                         counts?.map(count=>{
                             return(

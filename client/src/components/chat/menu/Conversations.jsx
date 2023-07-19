@@ -1,16 +1,18 @@
-import { useState, useEffect, useContext, Suspense } from 'react';
+import { useState, useEffect, useContext, Suspense,lazy } from 'react';
 
 import { Box, styled, Divider, filledInputClasses } from '@mui/material';
 
 import { AccountContext } from '../../../context/AccountProvider';
 
 //components
-import Conversation from './Conversation';
+
 import { getConversation, getConvoActivity, getMessages, getUsers, upLastConvoactivity } from '../../../service/api';
 import { generalUtils } from '../ChatDialog';
-import UnreadMessages from './UnreadMessages';
 import Loader from '../../loader/Loader';
 import { sortChats } from '../../../utils/sortConversations';
+
+const UnreadMessages = lazy(()=>import('./UnreadMessages'))
+const Conversation  = lazy(()=>import('./Conversation'))
 
 const url = 'http://localhost:8000';
 
@@ -27,6 +29,7 @@ const StyledDivider = styled(Divider)`
 `;
 
 const Conversations = ({ text }) => {
+
     const [users, setUsers] = useState([]);
     const [prevConversation, setPrevConversation] = useState([])
     const [lastActivity,setLastActivity] = useState()
@@ -35,14 +38,15 @@ const Conversations = ({ text }) => {
     const { account, socket, setActiveUsers, newMessageFlag} = useContext(AccountContext);
     const {conversation, setConversation,messages,uRMEvent,counts, setCounts} = useContext(generalUtils)
     
-    useEffect(() => {
+    useEffect(() => { 
         const fetchData = async () => {
             let data = await getUsers();
             let fiteredData = data.filter(user => user.name.toLowerCase().includes(text.toLowerCase()))
            
-            let sortedValues = sortChats(users,conversation)
+            let sortedValues = await sortChats(fiteredData,conversation)
             // setUsers(sortedValues)
-            setUsers(fiteredData);
+            
+            setUsers(sortedValues);
         }
         fetchData();
     }, [text || counts]);
@@ -110,13 +114,18 @@ const Conversations = ({ text }) => {
     },[uRMEvent ]);
 
     useEffect(()=>{
-        
-     
-    },[uRMEvent])
+        async function arrangeChats(){
+
+            let sortedValues = await sortChats(users,conversation)
+            // setUsers(sortedValues)
+            setUsers(sortedValues);
+        }
+        arrangeChats()
+    },[newMessageFlag||uRMEvent])
 
     return (
-        <Component>
-              
+          <Component>
+               
                 
             <UnreadMessages lastActivity = {lastActivity} localMessage={localMessage} setCounts={setCounts} counts = {counts} />
            
@@ -132,6 +141,7 @@ const Conversations = ({ text }) => {
                 ))
             }
         </Component>
+ 
     )
 }
 

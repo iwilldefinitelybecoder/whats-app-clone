@@ -1,7 +1,7 @@
 import express from 'express';
 
 
-import { newConversation, getConversation } from '../controller/conversation-controller.js';
+import { newConversation, getConversation, getAllConversation } from '../controller/conversation-controller.js';
 import { addUser, getUser } from '../controller/user-controller.js';
 import { newMessage, getMessage, deleteMessage }from '../controller/message-controller.js';
 import { uploadImage, getImage } from '../controller/image-controller.js';
@@ -16,6 +16,7 @@ route.get('/users', getUser);
 
 route.post('/conversation/add', newConversation);
 route.post('/conversation/get', getConversation);
+route.post('/conversation/getall', getAllConversation);
 
 route.post('/message/add', newMessage);
 route.get('/message/get/:id', getMessage);

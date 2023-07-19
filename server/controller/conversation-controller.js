@@ -33,3 +33,13 @@ export const getConversation = async (request, response) => {
     }
 
 }
+
+export const getAllConversation = async (request, response) => {
+    try {
+        const conversation = await Conversation.find({});
+        response.status(200).json(conversation);
+    } catch (error) {
+        response.status(500).json(error);
+    }
+
+}

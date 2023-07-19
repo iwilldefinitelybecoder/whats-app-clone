@@ -39,6 +39,17 @@ export const getConversation = async (users) => {
     }
 }
 
+export const getAllConversation = async (users) => {
+    try {
+        let response = await axios.post(`${url}/conversation/getall`, users);
+        
+        return response.data;
+    } catch (error) {
+        console.log('Error while calling getConversation API ', error);
+    }
+}
+
+
 export const getMessages = async (id) => {
     try {
         let response = await axios.get(`${url}/message/get/${id}`);
